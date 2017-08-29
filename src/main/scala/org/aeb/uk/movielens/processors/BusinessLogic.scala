@@ -6,7 +6,7 @@ import org.apache.spark.sql.functions.{asc, desc, row_number}
 import org.apache.spark.sql.hive.HiveContext
 
 /**
-  * Created by azrael on 29/08/17.
+  * Created by aeb on 29/08/17.
   */
 object BusinessLogic {
 
@@ -43,7 +43,7 @@ object BusinessLogic {
     *   a tie in the ranking, the top N films are ranked by movie ID.
     *
     *   Extra conditioning is applied to the output, for example sorting by user ID and movie ID
-    *   and including the movie name in the data.
+    *   and including the movie name in the data to make it more readable.
     * </p>
     *
     * @param hiveContext

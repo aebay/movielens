@@ -24,12 +24,12 @@ object Executor {
     val moviesFilePath = paths( "inputPath" ) + "movies.dat"
     val movies = readDataset( hiveContext, moviesFilePath, delimiter )
       .map( line => Movie( line(0).toInt, line(1), line(2) ) )
-      .toDF()
+      .toDF.cache
 
     val ratingsFilePath = paths( "inputPath" ) + "ratings.dat"
     val ratings = readDataset( hiveContext, ratingsFilePath, delimiter )
       .map( line => Rating( line(0).toInt, line(1).toInt, line(2).toInt, line(3).toLong ) )
-      .toDF()
+      .toDF.cache
 
     // create table of movie ratings statistics
     val movieRatings = processMovieRatings( hiveContext, movies, ratings )
