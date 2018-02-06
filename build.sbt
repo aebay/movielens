@@ -1,9 +1,17 @@
-lazy val root = (project in file(".")).
-  settings(
+import Dependencies._
+
+lazy val commonSettings = Seq(
+  version := "0.1.0",
+  scalaVersion := "2.10.6",
+  scalaBinaryVersion := "2.10"
+)
+
+lazy val root = (project in file("."))
+  .settings(
     name := "movielens",
-    version := "1.0",
-    scalaVersion := "2.10.6",
-    mainClass in Compile := Some("org.aeb.uk.movielens.driver.Main")
+    commonSettings,
+    mainClass in Compile := Some("org.aeb.uk.movielens.Driver"),
+    libraryDependencies ++= commonDependencies
   )
 
 assemblyMergeStrategy in assembly := {
@@ -13,12 +21,3 @@ assemblyMergeStrategy in assembly := {
     val oldStrategy = (assemblyMergeStrategy in assembly).value
     oldStrategy(x)
 }
-
-lazy val sparkVersion = "1.6.3"
-
-libraryDependencies ++= Seq(
-
-  "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
-  "org.apache.spark" %% "spark-hive" % sparkVersion % "provided"
-
-)

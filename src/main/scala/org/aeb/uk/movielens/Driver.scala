@@ -1,16 +1,14 @@
-package org.aeb.uk.movielens.driver
-
-import org.aeb.uk.movielens.processors.Executor
+package org.aeb.uk.movielens
 
 import com.typesafe.config.{Config, ConfigFactory}
-
+import org.aeb.uk.movielens.processors.Executor
 import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**
   * Created by aeb on 28/08/17.
   */
-object Main extends App {
+object Driver extends App {
 
   /**
     * Generic function for retrieving Java system parameters

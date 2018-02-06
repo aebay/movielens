@@ -23,7 +23,7 @@ Application that reads data from the movielens database and outputs parquet tabl
 3.  Add `addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.5")` to `project/assembly.sbt`
 4.  From the terminal, in the root of the project run:
 ```
-$ sbt clean clean-files assembly
+$ sbt clean cleanFiles assembly
 ```
 
 ## Running
@@ -38,9 +38,9 @@ $ sbt clean clean-files assembly
                --files "application.properties,spark.properties" \ 
                --driver-class-path ./ \ 
                --conf spark.driver.extraJavaOptions="-DinputPath=/PATH/TO/INPUT/FOLDER \ 
-                                                     -DoutputPath=/PATH/TO/OUTPUT/FOLDER \
-               --class org.aeb.uk.movielens.driver.Main \
-               movielens-assembly-1.0.jar
+                                                     -DoutputPath=/PATH/TO/OUTPUT/FOLDER" \
+               --class org.aeb.uk.movielens.Driver \
+               movielens-assembly-0.1.0.jar
 ```
 
 **Notes**:
