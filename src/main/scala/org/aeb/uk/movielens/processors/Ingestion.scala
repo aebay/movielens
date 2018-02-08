@@ -26,4 +26,14 @@ object Ingestion {
 
   }
 
+  def readAsDataset( filePath: String, delimiter: String )( implicit hiveContext: HiveContext ): Dataset[Array[String]] = {
+
+    import hiveContext.implicits._
+
+    hiveContext.read.text( filePath )
+      .as[String]
+      .map( _.split( delimiter ) )
+
+  }
+
 }
