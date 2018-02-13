@@ -44,7 +44,7 @@ object Driver extends App {
 
   // load configurations
   val sparkParams: Config = ConfigFactory.load( "spark.properties" )
-  val appParams: Config = ConfigFactory.load( "application.properties" );
+  val appParams: Config = ConfigFactory.load( "application.properties" )
 
   // load input and output directory paths
   val paths = loadPaths()
@@ -55,10 +55,10 @@ object Driver extends App {
     .setMaster( sparkParams.getString( "spark.master" ) )
 
   val sparkContext = new SparkContext( sparkConf )
-  val hiveContext = new HiveContext( sparkContext )
+  implicit val hiveContext = new HiveContext( sparkContext )
 
   // launch executor
-  Executor.run( hiveContext, appParams, paths )
+  Executor.run( appParams, paths )
 
   // close context
   sparkContext.stop()

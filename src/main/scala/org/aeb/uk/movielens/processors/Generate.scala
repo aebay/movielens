@@ -8,7 +8,7 @@ import org.apache.spark.sql.hive.HiveContext
 /**
   * Created by aeb on 29/08/17.
   */
-object BusinessLogic {
+object Generate {
 
   /**
     * Returns a Dataframe including the minimum, maximum and average user ratings for each film.
@@ -18,7 +18,7 @@ object BusinessLogic {
     * @param ratings
     * @return
     */
-  def processMovieRatings(hiveContext: HiveContext, movies: DataFrame, ratings: DataFrame ): DataFrame = {
+  def movieRatingsTable(hiveContext: HiveContext, movies: DataFrame, ratings: DataFrame ): DataFrame = {
 
     // simplify the ratings DataFrame
     val simpleRatings = ratings.drop( "userId" )
@@ -52,7 +52,7 @@ object BusinessLogic {
     * @param topN
     * @return
     */
-  def processTopNMoviesPerUser(hiveContext: HiveContext, movies: DataFrame, ratings: DataFrame, topN: Int ): DataFrame = {
+  def topNMoviesPerUserTable(hiveContext: HiveContext, movies: DataFrame, ratings: DataFrame, topN: Int ): DataFrame = {
 
     import hiveContext.implicits._
 

@@ -3,8 +3,7 @@ package org.aeb.uk.movielens.processors
 import com.typesafe.config.Config
 
 import org.aeb.uk.movielens.models.{Movie, Rating}
-import org.aeb.uk.movielens.processors.BusinessLogic._
-import org.aeb.uk.movielens.processors.Ingestion._
+import org.aeb.uk.movielens.processors.Generate._
 
 import org.apache.spark.sql.hive.HiveContext
 
@@ -13,7 +12,7 @@ import org.apache.spark.sql.hive.HiveContext
   */
 object Executor {
 
-  def run( hiveContext: HiveContext, appParams: Config, paths: Map[String, String] ) {
+  def run( appParams: Config, paths: Map[String, String] )( implicit hiveContext: HiveContext ) {
 
     import hiveContext.implicits._
 
@@ -22,20 +21,19 @@ object Executor {
 
     // ingest data
     val moviesFilePath = paths( "inputPath" ) + "movies.dat"
-    val movies = readDataset( hiveContext, moviesFilePath, delimiter )
-      .map( line => Movie( line(0).toInt, line(1), line(2) ) )
-      .toDF.cache
-
     val ratingsFilePath = paths( "inputPath" ) + "ratings.dat"
-    val ratings = readDataset( hiveContext, ratingsFilePath, delimiter )
-      .map( line => Rating( line(0).toInt, line(1).toInt, line(2).toInt, line(3).toLong ) )
-      .toDF.cache
+    val moviesData = Ingest.textFile( moviesFilePath )
+    val ratingsData = Ingest.textFile( ratingsFilePath )
+
+    // create the base tables in Dataset form
+    val movies = Transform.toMovieTable( moviesData, delimiter ).cache
+    val ratings = Transform.toRatingsTable( ratingsData, delimiter ).cache
 
     // create table of movie ratings statistics
-    val movieRatings = processMovieRatings( hiveContext, movies, ratings )
+    val movieRatings = Generate.movieRatingsTable( hiveContext, moviesData, ratingsData )
 
     // create table for top N movies of each user
-    val topNMoviesPerUser = processTopNMoviesPerUser( hiveContext, movies, ratings, topN )
+    val topNMoviesPerUser = Generate.topNMoviesPerUserTable( hiveContext, moviesData, ratingsData, topN )
 
     // persist in parquet format
     val movieRatingsFilePath = paths( "outputPath" ) + "movieRatings.parquet"

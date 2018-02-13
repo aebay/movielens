@@ -1,10 +1,10 @@
 package org.aeb.uk.movielens
 
 import org.aeb.uk.models.TextFileGenerator
-import org.aeb.uk.movielens.processors.Ingestion
+import org.aeb.uk.movielens.processors.Ingest
 import org.aeb.uk.spark.SparkHiveSuite
 
-class IngestionIT extends SparkHiveSuite {
+class IngestIT extends SparkHiveSuite {
 
   private val colonDelimitedFile = TextFileGenerator( "/tmp/", "colonDelimitedText.txt", delimiter = ":" )
   private val spaceDelimitedFile = TextFileGenerator( "/tmp/", "spaceDelimitedText.txt" )
@@ -31,7 +31,7 @@ class IngestionIT extends SparkHiveSuite {
     val input = sparkContext.parallelize( Array(row, row, row) )
 
     val expectedResult = hiveContext.createDataset( input )
-    val actualResult = Ingestion.readAsDataset( colonDelimitedFile.filePath, colonDelimitedFile.delimiter )
+    val actualResult = Ingest.textFile( colonDelimitedFile.filePath, colonDelimitedFile.delimiter )
 
     assert( expectedResult.collect.deep === actualResult.collect.deep )
 
@@ -45,7 +45,7 @@ class IngestionIT extends SparkHiveSuite {
     val input = sparkContext.parallelize( Array(row, row, row) )
 
     val expectedResult = hiveContext.createDataset( input )
-    val actualResult = Ingestion.readAsDataset( spaceDelimitedFile.filePath, spaceDelimitedFile.delimiter )
+    val actualResult = Ingest.textFile( spaceDelimitedFile.filePath, spaceDelimitedFile.delimiter )
 
     assert( expectedResult.collect.deep === actualResult.collect.deep )
 
