@@ -6,7 +6,7 @@ import org.apache.spark.sql.Dataset
 // Todo: make even more generic...
 object Transform {
 
-  def toRatingsTable( rawFileData: Dataset[String], delimiter: String ): Dataset[Rating] =
+  def toRatingTable( rawFileData: Dataset[String], delimiter: String ): Dataset[Rating] =
     rawFileData.map( line => Rating( line, delimiter ) )
 
   def toMovieTable( rawFileData: Dataset[String], delimiter: String ): Dataset[Movie] =

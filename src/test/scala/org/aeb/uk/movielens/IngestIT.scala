@@ -7,7 +7,6 @@ import org.aeb.uk.spark.SparkHiveSuite
 class IngestIT extends SparkHiveSuite {
 
   private val colonDelimitedFile = TextFileGenerator( "/tmp/", "colonDelimitedText.txt", delimiter = ":" )
-  private val spaceDelimitedFile = TextFileGenerator( "/tmp/", "spaceDelimitedText.txt" )
 
   // Todo: seems awkward, must be a better way of doing this...
   private lazy val hiveContextImplicit = hiveContext
@@ -17,35 +16,20 @@ class IngestIT extends SparkHiveSuite {
     super.beforeAll()
 
     TextFileGenerator.write( colonDelimitedFile )
-    TextFileGenerator.write( spaceDelimitedFile )
 
   }
 
   behavior of "Ingestion module"
 
-  it should "read in a text file and split on the ':' delimiter" in {
+  it should "read in a text file and convert each line to a continuous string element" in {
 
     import hiveContextImplicit.implicits._
 
-    val row = Array( "test1", "test2", "test3" )
+    val row = "test1:test2:test3"
     val input = sparkContext.parallelize( Array(row, row, row) )
 
     val expectedResult = hiveContext.createDataset( input )
-    val actualResult = Ingest.textFile( colonDelimitedFile.filePath, colonDelimitedFile.delimiter )
-
-    assert( expectedResult.collect.deep === actualResult.collect.deep )
-
-  }
-
-  it should "read in a text file and split on the ' ' delimiter" in {
-
-    import hiveContextImplicit.implicits._
-
-    val row = Array( "test1", "test2", "test3" )
-    val input = sparkContext.parallelize( Array(row, row, row) )
-
-    val expectedResult = hiveContext.createDataset( input )
-    val actualResult = Ingest.textFile( spaceDelimitedFile.filePath, spaceDelimitedFile.delimiter )
+    val actualResult = Ingest.textFile( colonDelimitedFile.filePath )
 
     assert( expectedResult.collect.deep === actualResult.collect.deep )
 
@@ -54,7 +38,6 @@ class IngestIT extends SparkHiveSuite {
   override def afterAll(): Unit = {
 
     TextFileGenerator.delete( colonDelimitedFile )
-    TextFileGenerator.delete( spaceDelimitedFile )
 
     super.afterAll()
 
