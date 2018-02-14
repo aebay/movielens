@@ -1,4 +1,4 @@
-package org.aeb.uk.models
+package org.aeb.uk.movielens.models
 
 import java.io.PrintWriter
 import scala.sys.process._

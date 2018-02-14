@@ -1,7 +1,6 @@
-package org.aeb.uk.movielens
+package org.aeb.uk.movielens.processors
 
-import org.aeb.uk.models.TextFileGenerator
-import org.aeb.uk.movielens.processors.Ingest
+import org.aeb.uk.movielens.models.TextFileGenerator
 import org.aeb.uk.spark.SparkHiveSuite
 
 class IngestIT extends SparkHiveSuite {

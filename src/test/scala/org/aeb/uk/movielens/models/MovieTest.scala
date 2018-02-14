@@ -1,4 +1,4 @@
-package org.aeb.uk.models
+package org.aeb.uk.movielens.models
 
 import org.aeb.uk.movielens.models.Movie;
 import org.scalatest.FlatSpec;

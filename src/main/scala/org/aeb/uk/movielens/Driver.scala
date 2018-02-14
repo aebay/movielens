@@ -1,7 +1,7 @@
 package org.aeb.uk.movielens
 
 import com.typesafe.config.{Config, ConfigFactory}
-import org.aeb.uk.movielens.processors.Executor
+import org.aeb.uk.movielens.processors.Job
 import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -58,7 +58,7 @@ object Driver extends App {
   implicit val hiveContext = new HiveContext( sparkContext )
 
   // launch executor
-  Executor.run( appParams, paths )
+  Job.run( appParams, paths )
 
   // close context
   sparkContext.stop()

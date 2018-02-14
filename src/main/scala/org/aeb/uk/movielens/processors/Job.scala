@@ -2,19 +2,14 @@ package org.aeb.uk.movielens.processors
 
 import com.typesafe.config.Config
 
-import org.aeb.uk.movielens.models.{Movie, Rating}
-import org.aeb.uk.movielens.processors.Generate._
-
 import org.apache.spark.sql.hive.HiveContext
 
 /**
   * Created by aeb on 28/08/17.
   */
-object Executor {
+object Job {
 
   def run( appParams: Config, paths: Map[String, String] )( implicit hiveContext: HiveContext ) {
-
-    import hiveContext.implicits._
 
     val delimiter = appParams.getString( "field.delimiter" )
     val topN = appParams.getInt( "user.param.topnmovies" )
@@ -25,15 +20,15 @@ object Executor {
     val moviesData = Ingest.textFile( moviesFilePath )
     val ratingsData = Ingest.textFile( ratingsFilePath )
 
-    // create the base tables in Dataset form
-    val movies = Transform.toMovieTable( moviesData, delimiter ).cache
-    val ratings = Transform.toRatingsTable( ratingsData, delimiter ).cache
+    // create the base tables and cache to avoid having to rebuild these
+    val movies = Transform.toMovieTable( moviesData, delimiter ).toDF.cache
+    val ratings = Transform.toRatingTable( ratingsData, delimiter ).toDF.cache
 
     // create table of movie ratings statistics
-    val movieRatings = Generate.movieRatingsTable( hiveContext, moviesData, ratingsData )
+    val movieRatings = Generate.movieRatingTable( movies, ratings )
 
     // create table for top N movies of each user
-    val topNMoviesPerUser = Generate.topNMoviesPerUserTable( hiveContext, moviesData, ratingsData, topN )
+    val topNMoviesPerUser = Generate.topNMoviesPerUserTable( movies, ratings, topN )
 
     // persist in parquet format
     val movieRatingsFilePath = paths( "outputPath" ) + "movieRatings.parquet"

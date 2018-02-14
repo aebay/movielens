@@ -1,7 +1,6 @@
-package scala.org.aeb.uk.movielens
+package org.aeb.uk.movielens.processors
 
 import org.aeb.uk.movielens.models.{Movie, Rating}
-import org.aeb.uk.movielens.processors.Transform
 import org.aeb.uk.spark.SparkHiveSuite
 
 class TransformIT extends SparkHiveSuite {
@@ -11,7 +10,7 @@ class TransformIT extends SparkHiveSuite {
 
   behavior of "Transform module"
 
-  it should "convert a Dataset of Movie strings to a Dataset of Movie classes" in {
+  it should "convert a Dataset of Movie strings to a DataFrame of Movie classes" in {
 
     val movieId = 1
     val title = "Deadpool"
